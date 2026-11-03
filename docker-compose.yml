@@ -3,7 +3,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python app/manage.py runserver 0.0.0.0:8000
     volumes:
       - ./backend:/app
     ports:
@@ -26,8 +26,8 @@ services:
       - /app/.next
     ports:
       - "3000:3000"
-    env_file:
-      - ./frontend/.env.local
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
     depends_on:
       - backend
 
