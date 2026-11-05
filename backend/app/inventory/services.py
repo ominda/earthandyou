@@ -187,3 +187,31 @@ def mark_sold(
             notes=notes,
         )
     return log
+
+
+def mark_export_ready(
+    inventory_item: InventoryItem,
+    actor: str = "system",
+    notes: str = "",
+) -> InventoryAuditLog:
+    """
+    Marks an InventoryItem as export-ready.
+    Raises ValueError if the item is not sold.
+    """
+    if not inventory_item.is_sold:
+        raise ValueError(
+            f"Gemstone {inventory_item.gemstone_id} must be sold before marking export-ready."
+        )
+
+    with transaction.atomic():
+        inventory_item.is_export_ready = True
+        inventory_item.save(update_fields=["is_export_ready", "updated_at"])
+        log = InventoryAuditLog.objects.create(
+            physical_gemstone=inventory_item.physical_gemstone,
+            event=AuditEvent.MARKED_EXPORT_READY,
+            from_state="sold",
+            to_state="export_ready",
+            actor=actor,
+            notes=notes,
+        )
+    return log

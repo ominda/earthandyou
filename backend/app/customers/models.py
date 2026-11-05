@@ -61,6 +61,110 @@ class Customer(AbstractBaseUser, PermissionsMixin):
         return f"{self.first_name} {self.last_name}".strip()
 
 
+class CustomerProfile(models.Model):
+    """
+    Extended profile data for a customer.
+    Created automatically on first access via get_or_create.
+    """
+
+    customer = models.OneToOneField(
+        Customer,
+        on_delete=models.CASCADE,
+        related_name="profile",
+    )
+    phone = models.CharField(max_length=30, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    newsletter_opt_in = models.BooleanField(default=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Customer Profile"
+        verbose_name_plural = "Customer Profiles"
+
+    def __str__(self):
+        return f"Profile — {self.customer.email}"
+
+
+class CustomerAddress(models.Model):
+
+    class AddressType(models.TextChoices):
+        SHIPPING = "shipping", "Shipping"
+        BILLING = "billing", "Billing"
+
+    customer = models.ForeignKey(
+        Customer,
+        on_delete=models.CASCADE,
+        related_name="addresses",
+    )
+    address_type = models.CharField(max_length=10, choices=AddressType.choices, default=AddressType.SHIPPING)
+    label = models.CharField(max_length=100, blank=True, help_text="e.g. Home, Office")
+    recipient_name = models.CharField(max_length=200)
+    phone = models.CharField(max_length=30, blank=True)
+    line1 = models.CharField(max_length=255)
+    line2 = models.CharField(max_length=255, blank=True)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100, blank=True)
+    postal_code = models.CharField(max_length=20, blank=True)
+    country = models.CharField(max_length=2, help_text="ISO 3166-1 alpha-2 country code")
+    is_default = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Customer Address"
+        verbose_name_plural = "Customer Addresses"
+        ordering = ["-is_default", "-created_at"]
+
+    def __str__(self):
+        return f"{self.customer.email} — {self.label or self.address_type} ({self.city})"
+
+    def save(self, *args, **kwargs):
+        if self.is_default:
+            # Unset any other default of the same type for this customer
+            CustomerAddress.objects.filter(
+                customer=self.customer,
+                address_type=self.address_type,
+                is_default=True,
+            ).exclude(pk=self.pk).update(is_default=False)
+        super().save(*args, **kwargs)
+
+
+class StaffProfile(models.Model):
+    """
+    Extended profile for staff/admin users.
+    Attached to any Customer with is_staff=True.
+    role drives permission group assignment via the setup_roles command.
+    mfa_secret stores the TOTP seed (Phase 8 will complete the TOTP flow).
+    """
+
+    class Role(models.TextChoices):
+        INVENTORY_MANAGER = "inventory_manager", "Inventory Manager"
+        CATALOG_MANAGER = "catalog_manager", "Catalog Manager"
+        ORDER_MANAGER = "order_manager", "Order Manager"
+        SUPERADMIN = "superadmin", "Superadmin"
+
+    customer = models.OneToOneField(
+        Customer,
+        on_delete=models.CASCADE,
+        related_name="staff_profile",
+        limit_choices_to={"is_staff": True},
+    )
+    role = models.CharField(max_length=30, choices=Role.choices)
+    department = models.CharField(max_length=100, blank=True)
+    notes = models.TextField(blank=True)
+    is_mfa_enabled = models.BooleanField(default=False)
+    mfa_secret = models.CharField(max_length=64, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Staff Profile"
+        verbose_name_plural = "Staff Profiles"
+
+    def __str__(self):
+        return f"{self.customer.email} — {self.get_role_display()}"
+
+
 class EmailVerificationToken(models.Model):
     """
     Single-use token for verifying a customer's email address.

@@ -29,6 +29,8 @@ LOCAL_APPS = [
     "inventory",
     "certification",
     "customers",
+    "commerce",
+    "outbox",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -132,3 +134,20 @@ SIMPLE_JWT = {
 
 # Email verification token expiry — module 3.1
 EMAIL_VERIFICATION_EXPIRY_HOURS = config("EMAIL_VERIFICATION_EXPIRY_HOURS", default=24, cast=int)
+
+# Reservation expiry — module 4.2
+RESERVATION_EXPIRY_MINUTES = config("RESERVATION_EXPIRY_MINUTES", default=15, cast=int)
+
+# Email — module 6.1
+EMAIL_BACKEND = config("EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
+EMAIL_HOST = config("EMAIL_HOST", default="")
+EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="Earth&You <no-reply@earthandyou.com>")
+
+# WEBXPAY — module 4.6
+WEBXPAY_MERCHANT_ID = config("WEBXPAY_MERCHANT_ID", default="")
+WEBXPAY_SECRET_KEY = config("WEBXPAY_SECRET_KEY", default="")
+WEBXPAY_API_URL = config("WEBXPAY_API_URL", default="https://payment.webxpay.com/")

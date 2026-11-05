@@ -1,0 +1,13 @@
+Payment Received — {{ order_ref }}
+
+Hi {{ customer_name }},
+
+We've received your payment for order {{ order_ref }}.
+
+Amount: USD {{ amount_usd }}
+Payment method: {{ provider }}
+Reference: {{ provider_reference }}
+
+We'll notify you once your order is dispatched.
+
+— Earth&You

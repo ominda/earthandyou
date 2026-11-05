@@ -1,0 +1,9 @@
+Your Reservation Has Expired — {{ gemstone_id }}
+
+Hi {{ customer_name }},
+
+Your reservation for {{ product_headline }} ({{ gemstone_id }}) has expired and the item has been released.
+
+If you're still interested, visit our catalog to check availability.
+
+— Earth&You

@@ -1,0 +1,7 @@
+{% extends "outbox/base_email.html" %}
+{% block content %}
+<h2>Your Reservation Has Expired</h2>
+<p>Hi {{ customer_name }},</p>
+<p>Your reservation for <strong>{{ product_headline }}</strong> ({{ gemstone_id }}) has expired and the item has been released.</p>
+<p>If you're still interested, visit our catalog to check availability.</p>
+{% endblock %}

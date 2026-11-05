@@ -1,0 +1,12 @@
+{% extends "outbox/base_email.html" %}
+{% block content %}
+<h2>Your Order Is On Its Way</h2>
+<p>Hi {{ customer_name }},</p>
+<p>Your order <strong>{{ order_ref }}</strong> has been dispatched.</p>
+<table style="width:100%;border-collapse:collapse;margin:16px 0;">
+  <tr><td style="padding:6px 0;color:#666;">Carrier</td><td>{{ carrier }}</td></tr>
+  {% if tracking_number %}<tr><td style="padding:6px 0;color:#666;">Tracking number</td><td>{{ tracking_number }}</td></tr>{% endif %}
+  {% if tracking_url %}<tr><td style="padding:6px 0;color:#666;">Track your shipment</td><td><a href="{{ tracking_url }}">{{ tracking_url }}</a></td></tr>{% endif %}
+  {% if estimated_delivery_date %}<tr><td style="padding:6px 0;color:#666;">Estimated delivery</td><td>{{ estimated_delivery_date }}</td></tr>{% endif %}
+</table>
+{% endblock %}

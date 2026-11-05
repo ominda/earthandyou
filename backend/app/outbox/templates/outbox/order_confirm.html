@@ -1,0 +1,17 @@
+{% extends "outbox/base_email.html" %}
+{% block content %}
+<h2>Order Confirmed</h2>
+<p>Hi {{ customer_name }},</p>
+<p>Thank you for your order. We've received it and it's being prepared.</p>
+<table style="width:100%;border-collapse:collapse;margin:16px 0;">
+  <tr><td style="padding:6px 0;color:#666;">Order reference</td><td><strong>{{ order_ref }}</strong></td></tr>
+  <tr><td style="padding:6px 0;color:#666;">Gemstone</td><td>{{ product_headline }} ({{ gemstone_id }})</td></tr>
+  <tr><td style="padding:6px 0;color:#666;">Subtotal</td><td>USD {{ subtotal_usd }}</td></tr>
+  <tr><td style="padding:6px 0;color:#666;">Shipping</td><td>USD {{ shipping_usd }}</td></tr>
+  <tr><td style="padding:6px 0;color:#666;"><strong>Total</strong></td><td><strong>USD {{ total_usd }}</strong></td></tr>
+</table>
+<p><strong>Shipping to:</strong><br>
+{{ shipping_address.recipient_name }}<br>
+{{ shipping_address.line1 }}{% if shipping_address.line2 %}, {{ shipping_address.line2 }}{% endif %}<br>
+{{ shipping_address.city }}, {{ shipping_address.country }}</p>
+{% endblock %}

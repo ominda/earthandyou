@@ -1,0 +1,18 @@
+Order Confirmed — {{ order_ref }}
+
+Hi {{ customer_name }},
+
+Thank you for your order. We've received it and it's being prepared.
+
+Order reference: {{ order_ref }}
+Gemstone: {{ product_headline }} ({{ gemstone_id }})
+Subtotal: USD {{ subtotal_usd }}
+Shipping: USD {{ shipping_usd }}
+Total: USD {{ total_usd }}
+
+Shipping to:
+{{ shipping_address.recipient_name }}
+{{ shipping_address.line1 }}{% if shipping_address.line2 %}, {{ shipping_address.line2 }}{% endif %}
+{{ shipping_address.city }}, {{ shipping_address.country }}
+
+— Earth&You

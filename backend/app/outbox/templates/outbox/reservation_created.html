@@ -1,0 +1,8 @@
+{% extends "outbox/base_email.html" %}
+{% block content %}
+<h2>Your Reservation Is Active</h2>
+<p>Hi {{ customer_name }},</p>
+<p>You've reserved <strong>{{ product_headline }}</strong> ({{ gemstone_id }}).</p>
+<p>Your reservation holds this item exclusively for you until <strong>{{ expires_at }}</strong>.</p>
+<p>Complete your checkout before it expires to secure your purchase.</p>
+{% endblock %}

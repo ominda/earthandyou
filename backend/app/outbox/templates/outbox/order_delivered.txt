@@ -1,0 +1,11 @@
+Your Order Has Been Delivered — {{ order_ref }}
+
+Hi {{ customer_name }},
+
+Your order {{ order_ref }} has been delivered.
+
+We hope you love your {{ product_headline }} ({{ gemstone_id }}).
+
+Thank you for choosing Earth&You.
+
+— Earth&You

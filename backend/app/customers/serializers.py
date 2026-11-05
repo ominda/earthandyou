@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from .models import Customer
+from .models import Customer, CustomerProfile, CustomerAddress, StaffProfile
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -42,6 +42,34 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = ["id", "email", "first_name", "last_name", "full_name", "is_email_verified", "date_joined"]
         read_only_fields = ["id", "email", "is_email_verified", "date_joined"]
+
+
+class CustomerProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerProfile
+        fields = ["phone", "date_of_birth", "newsletter_opt_in", "updated_at"]
+        read_only_fields = ["updated_at"]
+
+
+class CustomerAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerAddress
+        fields = [
+            "id", "address_type", "label", "recipient_name", "phone",
+            "line1", "line2", "city", "state", "postal_code", "country",
+            "is_default", "created_at", "updated_at",
+        ]
+        read_only_fields = ["id", "created_at", "updated_at"]
+
+
+class StaffProfileSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source="customer.email", read_only=True)
+    full_name = serializers.CharField(source="customer.full_name", read_only=True)
+    is_mfa_enabled = serializers.BooleanField(read_only=True)
+
+    class Meta:
+        model = StaffProfile
+        fields = ["email", "full_name", "role", "department", "is_mfa_enabled"]
 
 
 class TokenSerializer(serializers.Serializer):

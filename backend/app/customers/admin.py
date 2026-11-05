@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Customer, EmailVerificationToken
+from .models import Customer, EmailVerificationToken, StaffProfile
 
 
 @admin.register(Customer)
@@ -35,3 +35,16 @@ class EmailVerificationTokenAdmin(admin.ModelAdmin):
         return obj.is_valid
     is_valid.boolean = True
     is_valid.short_description = "Valid"
+
+
+@admin.register(StaffProfile)
+class StaffProfileAdmin(admin.ModelAdmin):
+    list_display = ["customer", "role", "department", "is_mfa_enabled", "created_at"]
+    list_filter = ["role", "is_mfa_enabled"]
+    search_fields = ["customer__email", "department"]
+    readonly_fields = ["created_at", "updated_at"]
+    fieldsets = [
+        (None, {"fields": ["customer", "role", "department", "notes"]}),
+        ("MFA", {"fields": ["is_mfa_enabled", "mfa_secret"]}),
+        ("Timestamps", {"fields": ["created_at", "updated_at"]}),
+    ]

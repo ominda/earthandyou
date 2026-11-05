@@ -1,0 +1,11 @@
+Your Reservation Is Active — {{ gemstone_id }}
+
+Hi {{ customer_name }},
+
+You've reserved {{ product_headline }} ({{ gemstone_id }}).
+
+Your reservation holds this item exclusively for you until {{ expires_at }}.
+
+Complete your checkout before it expires to secure your purchase.
+
+— Earth&You

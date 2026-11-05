@@ -3,8 +3,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenRefreshView
-from .serializers import RegisterSerializer, LoginSerializer, CustomerSerializer
+from .models import CustomerAddress, CustomerProfile, StaffProfile
+from .serializers import (
+    RegisterSerializer, LoginSerializer, CustomerSerializer,
+    CustomerProfileSerializer, CustomerAddressSerializer, StaffProfileSerializer,
+)
 from .services import issue_tokens, create_verification_token, verify_email_token
+from .permissions import IsStaff, HasRole
 
 
 class RegisterView(APIView):
@@ -107,10 +112,114 @@ class VerifyEmailView(APIView):
 class MeView(APIView):
     """
     GET /api/v1/auth/me/
+    PATCH /api/v1/auth/me/
 
-    Returns the authenticated customer's profile.
+    Returns or updates the authenticated customer's core fields.
     """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         return Response(CustomerSerializer(request.user).data)
+
+    def patch(self, request):
+        serializer = CustomerSerializer(request.user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+class ProfileView(APIView):
+    """
+    GET /api/v1/auth/me/profile/
+    PATCH /api/v1/auth/me/profile/
+
+    Returns or updates the customer's extended profile.
+    Profile is created on first GET if it doesn't exist.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        profile, _ = CustomerProfile.objects.get_or_create(customer=request.user)
+        return Response(CustomerProfileSerializer(profile).data)
+
+    def patch(self, request):
+        profile, _ = CustomerProfile.objects.get_or_create(customer=request.user)
+        serializer = CustomerProfileSerializer(profile, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+class AddressListView(APIView):
+    """
+    GET  /api/v1/auth/me/addresses/   — list all addresses
+    POST /api/v1/auth/me/addresses/   — create a new address
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        qs = CustomerAddress.objects.filter(customer=request.user)
+        return Response(CustomerAddressSerializer(qs, many=True).data)
+
+    def post(self, request):
+        serializer = CustomerAddressSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(customer=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class AddressDetailView(APIView):
+    """
+    GET    /api/v1/auth/me/addresses/{id}/
+    PATCH  /api/v1/auth/me/addresses/{id}/
+    DELETE /api/v1/auth/me/addresses/{id}/
+    """
+    permission_classes = [IsAuthenticated]
+
+    def _get_address(self, request, pk):
+        try:
+            return CustomerAddress.objects.get(pk=pk, customer=request.user)
+        except CustomerAddress.DoesNotExist:
+            return None
+
+    def get(self, request, pk):
+        address = self._get_address(request, pk)
+        if not address:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        return Response(CustomerAddressSerializer(address).data)
+
+    def patch(self, request, pk):
+        address = self._get_address(request, pk)
+        if not address:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        serializer = CustomerAddressSerializer(address, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        address = self._get_address(request, pk)
+        if not address:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        address.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class StaffMeView(APIView):
+    """
+    GET /api/v1/staff/me/
+
+    Returns the authenticated staff user's role and profile info.
+    Requires is_staff=True and a StaffProfile to exist.
+    """
+    permission_classes = [IsStaff]
+
+    def get(self, request):
+        try:
+            profile = request.user.staff_profile
+        except StaffProfile.DoesNotExist:
+            return Response(
+                {"detail": "Staff profile not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        return Response(StaffProfileSerializer(profile).data)

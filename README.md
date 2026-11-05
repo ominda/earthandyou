@@ -268,6 +268,27 @@ terraform plan
 | 2.2 | Product detail API | ✅ Done |
 | 2.3 | Search & advanced filters | ✅ Done |
 | 2.4 | Signed media URLs | ✅ Done |
-| 3.1 | Customer registration & login | ⬜ Next |
-| 3.2 | Customer profile & addresses | ⬜ Pending |
-| 3.3 | Admin user & RBAC | ⬜ Pending |
+| 3.1 | Customer registration & login | ✅ Done |
+| 3.2 | Customer profile & addresses | ✅ Done |
+| 3.3 | Admin user & RBAC | ✅ Done |
+| 4.1 | Cart | ✅ Done |
+| 4.2 | Reservation | ✅ Done |
+| 4.3 | Checkout | ✅ Done |
+| 4.4 | Order model & lifecycle | ✅ Done |
+| 4.5 | Payment abstraction | ✅ Done |
+| 4.6 | WEBXPAY adapter | ✅ Done |
+| 4.7 | Payment webhook handler | ✅ Done |
+| 4.8 | Refund model | ✅ Done |
+| 5.1 | Shipping configuration | ✅ Done |
+| 5.2 | Shipment model | ✅ Done |
+| 5.3 | Order tracking API | ✅ Done |
+| 5.4 | Export & compliance records | ✅ Done |
+| 6.1 | Notification service scaffold | ✅ Done |
+| 6.2 | Order notifications | ✅ Done |
+| 6.3 | Reservation notifications | ✅ Done |
+| 7.1 | Design system & layout | ✅ Done |
+| 7.2 | Catalog page | ✅ Done |
+| 7.3 | Product detail page | ✅ Done |
+| 7.4 | Cart & checkout UI | ⏳ Pending |
+| 7.5 | Customer auth UI | ⏳ Pending |
+| 7.6 | Order history & tracking UI | ⏳ Pending |

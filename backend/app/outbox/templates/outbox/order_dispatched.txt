@@ -1,0 +1,12 @@
+Your Order Is On Its Way — {{ order_ref }}
+
+Hi {{ customer_name }},
+
+Your order {{ order_ref }} has been dispatched.
+
+Carrier: {{ carrier }}
+{% if tracking_number %}Tracking number: {{ tracking_number }}
+{% endif %}{% if tracking_url %}Track your shipment: {{ tracking_url }}
+{% endif %}{% if estimated_delivery_date %}Estimated delivery: {{ estimated_delivery_date }}
+{% endif %}
+— Earth&You

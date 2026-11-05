@@ -1,0 +1,12 @@
+{% extends "outbox/base_email.html" %}
+{% block content %}
+<h2>Payment Received</h2>
+<p>Hi {{ customer_name }},</p>
+<p>We've received your payment for order <strong>{{ order_ref }}</strong>.</p>
+<table style="width:100%;border-collapse:collapse;margin:16px 0;">
+  <tr><td style="padding:6px 0;color:#666;">Amount</td><td><strong>USD {{ amount_usd }}</strong></td></tr>
+  <tr><td style="padding:6px 0;color:#666;">Payment method</td><td>{{ provider }}</td></tr>
+  <tr><td style="padding:6px 0;color:#666;">Reference</td><td>{{ provider_reference }}</td></tr>
+</table>
+<p>We'll notify you once your order is dispatched.</p>
+{% endblock %}

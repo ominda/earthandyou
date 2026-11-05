@@ -1,0 +1,8 @@
+{% extends "outbox/base_email.html" %}
+{% block content %}
+<h2>Your Order Has Been Delivered</h2>
+<p>Hi {{ customer_name }},</p>
+<p>Your order <strong>{{ order_ref }}</strong> has been delivered.</p>
+<p>We hope you love your <strong>{{ product_headline }}</strong> ({{ gemstone_id }}).</p>
+<p>Thank you for choosing Earth&amp;You.</p>
+{% endblock %}
