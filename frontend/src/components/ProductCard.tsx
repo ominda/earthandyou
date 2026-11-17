@@ -19,7 +19,11 @@ export default function ProductCard({ product }: { product: ProductListItem }) {
         {product.primary_media ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={`/api/v1/media/sign/?key=${encodeURIComponent(product.primary_media.s3_key)}`}
+            src={
+              product.primary_media.s3_key.startsWith("http")
+                ? product.primary_media.s3_key
+                : `${process.env.NEXT_PUBLIC_API_URL}/api/v1/catalog/media/sign/?key=${encodeURIComponent(product.primary_media.s3_key)}`
+            }
             alt={product.primary_media.alt_text || product.headline}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />

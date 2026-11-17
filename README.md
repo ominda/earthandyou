@@ -289,6 +289,19 @@ terraform plan
 | 7.1 | Design system & layout | ✅ Done |
 | 7.2 | Catalog page | ✅ Done |
 | 7.3 | Product detail page | ✅ Done |
-| 7.4 | Cart & checkout UI | ⏳ Pending |
-| 7.5 | Customer auth UI | ⏳ Pending |
-| 7.6 | Order history & tracking UI | ⏳ Pending |
+| 7.4 | Cart & checkout UI | ✅ Done |
+| 7.5 | Customer auth UI | ✅ Done |
+| 7.6 | Order history & tracking UI | ✅ Done |
+| 8.1 | Admin registrations (commerce + outbox) | ✅ Done |
+| 8.2 | Inventory lifecycle admin actions | ✅ Done |
+| 8.3 | Order management admin actions | ✅ Done |
+| 8.4 | Certification admin actions | ✅ Done |
+| 9.1 | Terraform: networking | ✅ Done |
+| 9.2 | Terraform: RDS PostgreSQL | ⬜ Pending |
+| 9.3 | Terraform: ElastiCache Redis | ⬜ Pending |
+| 9.4 | Terraform: S3 buckets | ⬜ Pending |
+| 9.5 | Terraform: ECS/Fargate — backend | ⬜ Pending |
+| 9.6 | Terraform: ECS/Fargate — frontend | ⬜ Pending |
+| 9.7 | Terraform: Secrets Manager | ⬜ Pending |
+| 9.8 | Terraform: WAF + CloudFront | ⬜ Pending |
+| 9.9 | CI/CD pipeline | ⬜ Pending |

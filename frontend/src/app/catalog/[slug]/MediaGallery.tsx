@@ -3,6 +3,11 @@
 import { useState } from "react";
 import type { ProductMedia } from "@/types/catalog";
 
+const resolveUrl = (s3_key: string) =>
+  s3_key.startsWith("http")
+    ? s3_key
+    : `${process.env.NEXT_PUBLIC_API_URL}/api/v1/catalog/media/sign/?key=${encodeURIComponent(s3_key)}`;
+
 type Props = { media: ProductMedia[]; headline: string };
 
 export default function MediaGallery({ media, headline }: Props) {
@@ -22,7 +27,7 @@ export default function MediaGallery({ media, headline }: Props) {
       {/* Main image */}
       <div className="aspect-square bg-stone-100 overflow-hidden">
         <img
-          src={`/api/v1/media/sign/?key=${encodeURIComponent(photos[active].s3_key)}`}
+          src={resolveUrl(photos[active].s3_key)}
           alt={photos[active].alt_text || headline}
           className="w-full h-full object-cover"
         />
@@ -40,7 +45,7 @@ export default function MediaGallery({ media, headline }: Props) {
               }`}
             >
               <img
-                src={`/api/v1/media/sign/?key=${encodeURIComponent(photo.s3_key)}`}
+                src={resolveUrl(photo.s3_key)}
                 alt={photo.alt_text || `${headline} ${i + 1}`}
                 className="w-full h-full object-cover"
               />

@@ -36,7 +36,6 @@ export default async function CatalogPage({ searchParams }: Props) {
       species,
       value_tier,
       search,
-      listing_status: "active",
       page: page ? Number(page) : undefined,
     });
   } catch {

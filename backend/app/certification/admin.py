@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib import messages
+from django.utils import timezone
 from django.utils.html import format_html
 from .models import Laboratory, CertificationReport, ProvenanceRecord, ProvenanceConfidence
 
@@ -36,6 +38,35 @@ class LaboratoryAdmin(admin.ModelAdmin):
     report_count.short_description = "Reports"
 
 
+def _set_as_primary(modeladmin, request, queryset):
+    if queryset.count() != 1:
+        modeladmin.message_user(
+            request,
+            "Select exactly one report to set as primary.",
+            level=messages.WARNING,
+        )
+        return
+    report = queryset.first()
+    report.set_as_primary()
+    modeladmin.message_user(
+        request,
+        f"{report} set as primary report for {report.physical_gemstone.gemstone_id}.",
+    )
+
+_set_as_primary.short_description = "Set selected report as primary"
+
+
+def _set_as_verified(modeladmin, request, queryset):
+    now = timezone.now()
+    count = queryset.exclude(verification_status="verified").update(
+        verification_status="verified",
+        verified_at=now,
+    )
+    modeladmin.message_user(request, f"{count} report(s) marked as Verified.")
+
+_set_as_verified.short_description = "Mark selected reports as Verified"
+
+
 @admin.register(CertificationReport)
 class CertificationReportAdmin(admin.ModelAdmin):
     list_display = [
@@ -53,6 +84,7 @@ class CertificationReportAdmin(admin.ModelAdmin):
         "laboratory__code",
     ]
     readonly_fields = ["verification_url", "created_at", "updated_at"]
+    actions = [_set_as_primary, _set_as_verified]
     fieldsets = [
         ("Gemstone & Laboratory", {
             "fields": ["physical_gemstone", "laboratory", "report_number", "report_type", "issue_date"],

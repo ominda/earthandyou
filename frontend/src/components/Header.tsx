@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 const NAV_LINKS = [
   { label: "Collection", href: "/catalog" },
@@ -10,6 +11,7 @@ const NAV_LINKS = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { isLoggedIn, logout } = useAuth();
 
   return (
     <header className="bg-white border-b border-stone-200 sticky top-0 z-50">
@@ -36,18 +38,15 @@ export default function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-4">
-            <Link
-              href="/account"
-              className="text-sm tracking-widest uppercase text-stone-600 hover:text-gold-500 transition-colors hidden md:block"
-            >
-              Account
-            </Link>
-            <Link
-              href="/cart"
-              className="text-sm tracking-widest uppercase text-stone-600 hover:text-gold-500 transition-colors"
-            >
-              Cart
-            </Link>
+            {isLoggedIn ? (
+              <>
+                <Link href="/account" className="text-sm tracking-widest uppercase text-stone-600 hover:text-gold-500 transition-colors hidden md:block">Account</Link>
+                <button onClick={logout} className="text-sm tracking-widest uppercase text-stone-600 hover:text-gold-500 transition-colors hidden md:block">Log Out</button>
+              </>
+            ) : (
+              <Link href="/account/login" className="text-sm tracking-widest uppercase text-stone-600 hover:text-gold-500 transition-colors hidden md:block">Log In</Link>
+            )}
+            <Link href="/cart" className="text-sm tracking-widest uppercase text-stone-600 hover:text-gold-500 transition-colors">Cart</Link>
 
             {/* Mobile menu toggle */}
             <button

@@ -1,6 +1,16 @@
 import Link from "next/link";
+import { getProducts } from "@/lib/api";
+import ProductCard from "@/components/ProductCard";
 
-export default function HomePage() {
+export default async function HomePage() {
+  let featured;
+  try {
+    const data = await getProducts({ listing_status: "active", page: 1 });
+    featured = data.results.slice(0, 4);
+  } catch {
+    featured = [];
+  }
+
   return (
     <>
       {/* Hero */}
@@ -37,6 +47,26 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* Featured products */}
+      {featured.length > 0 && (
+        <section className="section-container py-16">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <p className="text-xs tracking-[0.3em] uppercase text-gold-500 mb-1">Featured</p>
+              <h2 className="font-serif text-heading text-stone-900">From the Collection</h2>
+            </div>
+            <Link href="/catalog" className="text-sm tracking-widest uppercase text-stone-500 hover:text-gold-500 transition-colors">
+              View All →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featured.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </section>
+      )}
     </>
   );
 }
